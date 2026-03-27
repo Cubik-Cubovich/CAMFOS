@@ -18,6 +18,15 @@ void register_interrupt_handler(uint8_t vector, void (*handler)(interrupt_frame_
 }
 
 void isr_handler_c(interrupt_frame_t *frame) {
+    debug_str("frame addr: ");
+    debug_num((uint64_t)frame);
+    debug_char('\n');
+    debug_str("int_no at offset: ");
+    debug_num((uint64_t)&frame->int_no);
+    debug_char('\n');
+    debug_str("int_no value: ");
+    debug_num(frame->int_no);
+    debug_char('\n');
     debug_char('C');
     void (*handler)(interrupt_frame_t *) = interrupt_handlers[frame->int_no];
     if (handler)

@@ -29,6 +29,16 @@ static void hcf(void) {
 }
 
 void kmain(void) {
+    uint16_t cs;
+    asm volatile("mov %%cs, %0" : "=r"(cs));
+    debug_str("CS in kmain: ");
+    debug_num(cs);
+    debug_char('\n');
+    // CPL = cs & 3
+    debug_str("CPL: ");
+    debug_num(cs & 3);
+    debug_char('\n');
+
     if (LIMINE_BASE_REVISION_SUPPORTED(limine_base_revision) == false) hcf();
     if (framebuffer_request.response == NULL
      || framebuffer_request.response->framebuffer_count < 1) hcf();
@@ -39,10 +49,22 @@ void kmain(void) {
     init_interrupts();
     
     // Настройка таймера
-    init_timer(100);
+    init_timer(1000);
     
     // Включаем прерывания
     enable_interrupts();
+    asm volatile("int $0x32");
+    uint64_t flags;
+    asm volatile("pushf; pop %0" : "=r"(flags));
+    debug_str("RFLAGS: ");
+    debug_num(flags);
+    debug_char('\n');
+
+    uint64_t rflags;
+    asm volatile("pushf; pop %0" : "=r"(rflags));
+    debug_str("RFLAGS: ");
+    debug_num(rflags);
+    debug_char('\n');
     
     // Рисуем градиент
     volatile uint32_t *fb_ptr = framebuffer->address;

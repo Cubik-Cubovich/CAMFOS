@@ -21,5 +21,6 @@ struct idt_ptr {
 extern void load_idt(struct idt_ptr *ptr);
 void idt_init(void);
 void idt_set_gate(uint8_t vector, void *handler, uint8_t type_attr);
+uint64_t idt_get_gate_address(uint8_t vector);
 
 #endif

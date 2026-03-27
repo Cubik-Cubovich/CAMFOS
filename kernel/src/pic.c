@@ -44,7 +44,7 @@ void pic_mask_irq(uint8_t irq, bool mask) {
 }
 
 void pic_send_eoi(uint8_t irq) {
+    outb(0x20, 0x20);   // EOI master
     if (irq >= 8)
-        outb(PIC_SLAVE_CMD, 0x20);
-    outb(PIC_MASTER_CMD, 0x20);
+        outb(0xA0, 0x20);
 }
